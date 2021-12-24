@@ -80,8 +80,12 @@ class PegasosClassifier:
 
 
 class Classifier(PerceptronClassifier, PegasosClassifier):
-    def __init__(self):
-        pass
+    def __init__(self, X_train, X_val, Y_train, Y_val, T):
+        self.X_train = X_train
+        self.X_val = X_val
+        self.Y_train = Y_train
+        self.Y_val = Y_val
+        self.T = T
 
     def get_order(self, n_samples):
         try:
@@ -107,21 +111,18 @@ class Classifier(PerceptronClassifier, PegasosClassifier):
         preds[preds <= 0] = -1
         return preds
 
-    def classifier_accuracy(self, classifier, X_train, X_val, Y_train, Y_val, **kwargs) -> (float, float):
-        T = kwargs.get('T')
-        L = kwargs.get('L')
+    def classifier_accuracy(self, classifier, L=None) -> (float, float):
+        print("{} -> T: {}, L: {}".format(classifier, self.T, L))
+        if self.T and L:
+            theta, theta_0 = classifier(self.X_train, self.Y_train, self.T, L)
+        elif self.T:
+            theta, theta_0 = classifier(self.X_train, self.Y_train, self.T)
 
+        Y_train_predicted = self.classify(self.X_train, theta, theta_0)
+        X_val_predicted = self.classify(self.X_val, theta, theta_0)
 
-        if ('T' in kwargs) and ('L' in kwargs):
-            theta, theta_0 = classifier(X_train, Y_train, T, L)
-        elif 'T' in kwargs:
-            theta, theta_0 = classifier(X_train, Y_train, T)
-
-        Y_train_predicted = self.classify(X_train, theta, theta_0)
-        X_val_predicted = self.classify(X_val, theta, theta_0)
-
-        accuracy_train = self.accuracy(Y_train_predicted, Y_train)
-        accuracy_val = self.accuracy(X_val_predicted, Y_val)
+        accuracy_train = self.accuracy(Y_train_predicted, self.Y_train)
+        accuracy_val = self.accuracy(X_val_predicted, self.Y_val)
 
         return accuracy_train, accuracy_val
 
