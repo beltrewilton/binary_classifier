@@ -24,6 +24,7 @@ class PerceptronClassifier:
             # for i in self.get_order(n):
                 theta, theta_0 = self.__perceptron_one_step(X[i], Y[i], theta, theta_0)
 
+        print(theta, theta_0)
         return theta, theta_0
 
     def average_perceptron(self, X, Y, T) -> (np.ndarray, float):
