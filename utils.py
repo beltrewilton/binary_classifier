@@ -89,8 +89,8 @@ def unigram_words(texts):
 
     Feel free to change this code as guided by Problem 9
     """
-    stop_file = open('stopwords.txt')
-    stopwords = [f.strip('\n') for f in stop_file]
+    #stop_file = open('stopwords.txt')
+    #stopwords = [f.strip('\n') for f in stop_file]
 
     dictionary = {}  # maps word to unique index
     for text in texts:
